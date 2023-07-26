@@ -1,0 +1,16 @@
+<h1>my todo list</h1>
+
+<table>
+    <tr>
+        <th>Item</th>
+        <th></th>
+    </tr>
+    {% for task in tasks %}
+        <tr>
+            <th>{{ task.title }}</th>
+            <th><a href="{% url 'task' task.id %}">View</a></th>
+        </tr>
+    {% empty %}
+        <h3>no items in list!</h3>
+    {% endfor %}
+</table>
