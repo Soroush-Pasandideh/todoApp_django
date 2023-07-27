@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.db import transaction
+from django.shortcuts import redirect
+from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
@@ -9,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
+from base.forms import PositionForm
 from base.models import Task
 
 
@@ -83,3 +85,16 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     context_object_name = 'task'
     success_url = reverse_lazy('tasks')
+
+
+class TaskReorderView(View):
+    def post(self, request):
+        form = PositionForm(request.POST)
+
+        if form.is_valid():
+            positionList = form.cleaned_data["position"].split(',')
+
+            with transaction.atomic():
+                self.request.user.set_task_order(positionList)
+
+        return redirect(reverse_lazy('tasks'))
