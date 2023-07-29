@@ -9,7 +9,7 @@ from .models import Task
 
 @admin.register(models.Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['title', 'username', 'complete']
+    list_display = ['title', 'username', 'completed']
     list_per_page = 10
     list_filter = ['user']
     search_fields = ['title']
